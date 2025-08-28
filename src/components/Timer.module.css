@@ -1,0 +1,237 @@
+/* Загальний контейнер */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  gap: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s;
+}
+
+/* Режими */
+.workLight {
+  background: #ffe5e5;
+}
+.shortLight {
+  background: #e5ffe9;
+}
+.longLight {
+  background: #e5f0ff;
+}
+
+/* Темна тема */
+.workDark {
+  background: #5a1f1f; /* темно-червоний */
+  color: #f9f9f9;
+}
+
+.shortDark {
+  background: #1f5a29; /* темно-зелений */
+  color: #f9f9f9;
+}
+
+.longDark {
+  background: #1f3d5a; /* темно-синій */
+  color: #f9f9f9;
+}
+
+/* Щоб все всередині цих блоків мало світлий текст */
+.workDark .title,
+.workDark .mode,
+.workDark .counter,
+.workDark .timerText,
+.shortDark .title,
+.shortDark .mode,
+.shortDark .counter,
+.shortDark .timerText,
+.longDark .title,
+.longDark .mode,
+.longDark .counter,
+.longDark .timerText {
+  color: #f9f9f9;
+  fill: #f9f9f9; /* для svg тексту */
+}
+
+/* Заголовок */
+.title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #333;
+  text-align: center;
+}
+
+/* SVG таймер */
+.timerSvg {
+  width: 160px;
+  height: 160px;
+  transform: rotate(-90deg);
+}
+
+.timerTrack {
+  stroke: #e5e7eb;
+  stroke-width: 10;
+  fill: transparent;
+}
+
+.timerProgress {
+  stroke-width: 10;
+  stroke-linecap: round;
+  fill: transparent;
+  transition: stroke-dashoffset 0.8s linear;
+}
+
+.timerText {
+  font-size: 24px;
+  font-weight: bold;
+  fill: #111827;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  transform: rotate(90deg);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Текст */
+.mode,
+.counter {
+  font-size: 1rem;
+  color: #555;
+  margin: 4px 0;
+}
+
+/* Панель */
+.controls,
+.modes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.controls button,
+.modes button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #c94f4f;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.controls button:hover,
+.modes button:hover {
+  background: #a63a3a;
+  transform: translateY(-2px);
+}
+
+/* Панель налаштувань */
+.settings {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Лейбли */
+.settings label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Прибираємо стрілочки для input[type=number] */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* для Firefox */
+}
+
+/* Інпути */
+.input {
+  width: 100px;
+  height: 36px; /* зробимо висоту фіксованою */
+  padding: 0; /* видаляємо внутрішній padding */
+  text-align: center; /* горизонтальне центровання */
+  line-height: 36px; /* вертикальне вирівнювання по центру */
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+.input:focus {
+  border-color: #c94f4f;
+  box-shadow: 0 0 6px rgba(201, 79, 79, 0.5);
+}
+
+/* Кнопка Save */
+.settings button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #c94f4f;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.settings button:hover {
+  background: #a63a3a;
+}
+
+/* Центрований контейнер */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Темна тема для блока налаштувань */
+.settingsDark {
+  background: rgba(30, 30, 30, 0.9);
+  color: #f9f9f9;
+}
+.settingsDark label,
+.settingsDark p {
+  color: #f9f9f9;
+}
+.settingsDark .input {
+  background: #222;
+  color: #f9f9f9;
+  border: 2px solid #666;
+  text-align: center;
+  line-height: 34px;
+}
+.settingsDark .input:focus {
+  border-color: #c94f4f;
+  box-shadow: 0 0 6px rgba(201, 79, 79, 0.5);
+}
+.settingsDark button {
+  background: #c94f4f;
+  color: white;
+}
+.settingsDark button:hover {
+  background: #a63a3a;
+}
+
+select.input {
+  text-align: center; /* для обраного значення */
+  text-align-last: center; /* для самих опцій у деяких браузерах */
+}
