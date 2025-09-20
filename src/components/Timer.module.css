@@ -235,3 +235,95 @@ select.input {
   text-align: center; /* для обраного значення */
   text-align-last: center; /* для самих опцій у деяких браузерах */
 }
+
+/* ... (твій код зберігаю) */
+
+/* 📱 Адаптивність */
+
+/* Телефони (ширина < 600px) */
+@media (max-width: 600px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .settings {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  .controls button,
+  .modes button,
+  .settings button {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .container {
+    gap: 12px;
+  }
+}
+
+/* Планшети (600px – 900px) */
+@media (min-width: 600px) and (max-width: 900px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .settings {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .controls button,
+  .modes button {
+    padding: 8px 14px;
+  }
+}
+
+/* Десктопи (900px+) */
+@media (min-width: 900px) {
+  .title {
+    font-size: 2rem;
+  }
+}
+
+/* Контейнер SVG робимо відносним */
+.timerSvg {
+  width: 80%;
+  max-width: 220px; /* на великих екранах */
+  height: auto;
+  aspect-ratio: 1 / 1; /* щоб зберігалося співвідношення */
+  transform: rotate(-90deg);
+  display: block;
+  margin: 0 auto;
+}
+
+.timerTrack {
+  stroke: #e5e7eb;
+  stroke-width: 8;
+  fill: transparent;
+}
+
+.timerProgress {
+  stroke-width: 8;
+  stroke-linecap: round;
+  fill: transparent;
+  transition: stroke-dashoffset 0.8s linear;
+}
+
+.timerText {
+  font-size: clamp(16px, 4vw, 28px); /* текст теж адаптивний */
+  font-weight: bold;
+  fill: #111827;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  transform: rotate(90deg);
+  transform-box: fill-box;
+  transform-origin: center;
+}

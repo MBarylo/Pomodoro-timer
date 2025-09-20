@@ -2,19 +2,22 @@ import React, { useEffect, useState, useRef } from 'react'
 import styles from './Timer.module.css'
 
 const Timer = () => {
+  // Стандартні режими (секунди)
   const modes = {
-    work: 1500,
-    shortBreak: 300,
-    longBreak: 900,
+    work: 1500, // 25 хв
+    shortBreak: 300, // 5 хв
+    longBreak: 900, // 15 хв
   }
 
-  const [time, setTime] = useState(0)
-  const [isRunning, setIsRunning] = useState(false)
-  const [activeMode, setActiveMode] = useState('No activated mode')
-  const [count, setCount] = useState(0)
-  const [countWork, setCountWork] = useState(0)
-  const [initialTime, setInitialTime] = useState(modes.work)
+  // Основні стани
+  const [time, setTime] = useState(0) // час у секундах
+  const [isRunning, setIsRunning] = useState(false) // чи працює таймер
+  const [activeMode, setActiveMode] = useState('No activated mode') // поточний режим
+  const [count, setCount] = useState(0) // загальна кількість циклів
+  const [countWork, setCountWork] = useState(0) // кількість робочих циклів
+  const [initialTime, setInitialTime] = useState(modes.work) // початковий час для прогрес-бара
 
+  // Кастомні налаштування (хвилини → секунди)
   const [customWork, setCustomWork] = useState(25)
   const [customShortBreak, setCustomShortBreak] = useState(5)
   const [customLongBreak, setCustomLongBreak] = useState(15)
@@ -23,16 +26,19 @@ const Timer = () => {
   const [shortTime, setShortTime] = useState(customShortBreak * 60)
   const [longTime, setLongTime] = useState(customLongBreak * 60)
 
+  // Теми
   const [theme, setTheme] = useState('light')
   const [selectedTheme, setSelectedTheme] = useState(theme)
 
+  // Для підрахунку завершених сесій
   const [complete, setComplete] = useState(0)
 
+  // Перемикач теми
   const Theme = () => {
-    if (theme === 'light') setTheme('dark')
-    else setTheme('light')
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
   }
 
+  // Збереження кастомних налаштувань
   const setCustomSettings = () => {
     const newWork = customWork * 60
     const newShort = customShortBreak * 60
@@ -46,12 +52,14 @@ const Timer = () => {
     setTheme(newTheme)
     setCount(newComplete)
 
+    // зберігаємо у localStorage
     localStorage.setItem('workTime', newWork)
     localStorage.setItem('shortTime', newShort)
     localStorage.setItem('longTime', newLong)
     localStorage.setItem('theme', newTheme)
     localStorage.setItem('complete', newComplete)
 
+    // Оновлюємо час у залежності від режиму
     if (activeMode === 'work') {
       setTime(newWork)
       setInitialTime(newWork)
@@ -64,6 +72,7 @@ const Timer = () => {
     }
   }
 
+  // Режими
   const workAct = () => {
     setIsRunning(false)
     setTime(customWork * 60)
@@ -82,14 +91,18 @@ const Timer = () => {
     setInitialTime(customLongBreak * 60)
     setActiveMode('long break')
   }
+
+  // Прогрес-бал
   const progress =
     initialTime > 0 ? ((initialTime - time) / initialTime) * 100 : 0
   const radius = 70
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (progress / 100) * circumference
 
+  // Для сигналу
   const beepRef = useRef(null)
 
+  // Витягуємо налаштування з localStorage при першому рендері
   useEffect(() => {
     const saveWorkTime = localStorage.getItem('workTime')
     const saveShortTime = localStorage.getItem('shortTime')
@@ -116,12 +129,15 @@ const Timer = () => {
       setCount(Number(saveComplete))
     }
   }, [])
+
+  // Лічильник (зменшує час)
   useEffect(() => {
     if (!isRunning || time <= 0) return
     const id = setInterval(() => setTime((p) => p - 1), 1000)
     return () => clearInterval(id)
   }, [isRunning, time])
 
+  // Коли час вичерпався
   useEffect(() => {
     if (time !== 0 || activeMode === 'No activated mode') return
 
@@ -129,12 +145,15 @@ const Timer = () => {
     if (beepRef.current) beepRef.current.play()
 
     if (activeMode === 'work') {
+      // додаємо цикл
       setCount((prev) => {
         const newCount = prev + 1
-        localStorage.setItem('complete', newCount) // 👈 одразу зберігаємо
+        localStorage.setItem('complete', newCount)
         return newCount
       })
       setCountWork((p) => p + 1)
+
+      // кожні 4 роботи → довга перерва
       if (count === 3) {
         setTime(customLongBreak * 60)
         setInitialTime(customLongBreak * 60)
@@ -147,6 +166,7 @@ const Timer = () => {
       }
       setIsRunning(true)
     } else {
+      // після перерви знову робота
       setTime(customWork * 60)
       setInitialTime(customWork * 60)
       setActiveMode('work')
@@ -154,12 +174,14 @@ const Timer = () => {
     }
   }, [time])
 
+  // Формат часу (MM:SS)
   const formatTime = (time) => {
     const m = Math.floor(time / 60)
     const s = time % 60
     return `${m}:${s < 10 ? '0' : ''}${s}`
   }
 
+  // Колір для індикатора
   const indicatorColor =
     activeMode === 'work'
       ? '#10b981'
@@ -191,7 +213,8 @@ const Timer = () => {
     >
       <h1 className={styles.title}>🍅 Pomodoro Timer</h1>
 
-      <svg className={styles.timerSvg}>
+      {/* SVG таймер */}
+      <svg className={styles.timerSvg} viewBox="0 0 160 160">
         <circle className={styles.timerTrack} r={radius} cx="80" cy="80" />
         <circle
           className={styles.timerProgress}
@@ -206,10 +229,15 @@ const Timer = () => {
           {formatTime(time)}
         </text>
       </svg>
+
+      {/* Інфо */}
       <p className={styles.mode}>Current: {activeMode}</p>
       <p className={styles.mode}>Progress: {Math.round(progress)}%</p>
       <p className={styles.counter}>Completed Pomodoros: {count}</p>
+
+      {/* Панель */}
       <div className={styles.container}>
+        {/* Налаштування */}
         <div
           className={`${styles.settings} ${
             theme === 'dark' ? styles.settingsDark : ''
@@ -222,7 +250,7 @@ const Timer = () => {
               type="text"
               value={customWork}
               onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '') // тільки цифри
+                const val = e.target.value.replace(/\D/g, '')
                 setCustomWork(val === '' ? '' : Number(val))
               }}
               className={styles.input}
@@ -234,7 +262,7 @@ const Timer = () => {
               type="text"
               value={customShortBreak}
               onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '') // тільки цифри
+                const val = e.target.value.replace(/\D/g, '')
                 setCustomShortBreak(val === '' ? '' : Number(val))
               }}
               className={styles.input}
@@ -246,7 +274,7 @@ const Timer = () => {
               type="text"
               value={customLongBreak}
               onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '') // тільки цифри
+                const val = e.target.value.replace(/\D/g, '')
                 setCustomLongBreak(val === '' ? '' : Number(val))
               }}
               className={styles.input}
@@ -265,6 +293,8 @@ const Timer = () => {
           </label>
           <button onClick={setCustomSettings}>Save</button>
         </div>
+
+        {/* Управління */}
         <div className={styles.controls}>
           <button onClick={() => setIsRunning(true)}>▶ Start</button>
           <button onClick={() => setIsRunning(false)}>⏸ Pause</button>
@@ -276,17 +306,21 @@ const Timer = () => {
               setActiveMode('No activated mode')
               setCountWork(0)
               setCount(0)
-              localStorage.setItem('complete', 0) // скидаємо і в сховищі
+              localStorage.setItem('complete', 0)
             }}
           >
             🔄 Reset
           </button>
         </div>
+
+        {/* Вибір режимів */}
         <div className={styles.modes}>
           <button onClick={workAct}>💼 Work</button>
           <button onClick={shortBreakAct}>☕ Short Break</button>
           <button onClick={longBreakAct}>😴 Long Break</button>
         </div>
+
+        {/* Сигнал */}
         <audio
           ref={beepRef}
           id="beep"
