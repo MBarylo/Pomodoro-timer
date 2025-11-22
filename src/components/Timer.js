@@ -14,7 +14,7 @@ const Timer = () => {
   const [isRunning, setIsRunning] = useState(false) // чи працює таймер
   const [activeMode, setActiveMode] = useState('No activated mode') // поточний режим
   const [count, setCount] = useState(0) // загальна кількість циклів
-  const [countWork, setCountWork] = useState(0) // кількість робочих циклів
+  const [countWork, setCountWork] = useState(0)
   const [initialTime, setInitialTime] = useState(modes.work) // початковий час для прогрес-бара
 
   // Кастомні налаштування (хвилини → секунди)
@@ -26,17 +26,10 @@ const Timer = () => {
   const [shortTime, setShortTime] = useState(customShortBreak * 60)
   const [longTime, setLongTime] = useState(customLongBreak * 60)
 
+  console.log('', countWork, workTime, shortTime, longTime)
   // Теми
   const [theme, setTheme] = useState('light')
   const [selectedTheme, setSelectedTheme] = useState(theme)
-
-  // Для підрахунку завершених сесій
-  const [complete, setComplete] = useState(0)
-
-  // Перемикач теми
-  const Theme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
-  }
 
   // Збереження кастомних налаштувань
   const setCustomSettings = () => {
@@ -137,7 +130,6 @@ const Timer = () => {
     return () => clearInterval(id)
   }, [isRunning, time])
 
-  // Коли час вичерпався
   useEffect(() => {
     if (time !== 0 || activeMode === 'No activated mode') return
 
